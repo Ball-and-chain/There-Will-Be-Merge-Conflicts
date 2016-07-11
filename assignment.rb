@@ -2,13 +2,9 @@ class Assignment < ActiveRecord::Base
 
   validates :name, presence: true
 
-  validates :course_id, presence: true, numericality: {only_fixnum: true}
+  validates :course_id, presence: true
 
   validates :percent_of_grade, presence: true
-
-  has_many :assignments
-
-  has_many :course_id, -> { distinct }, through: :assignments
 
 
   scope :active_for_students, -> { where("active_at <= ? AND due_at >= ? AND students_can_submit = ?", Time.now, Time.now, true) }

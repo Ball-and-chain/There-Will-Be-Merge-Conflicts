@@ -31,7 +31,7 @@ class ApplicationTest < Minitest::Test
 
   def test_lesson_destruction_equals_reading_annahilation
     a = Lesson.create!(name: "hi")
-    b = Reading.create!(lesson_id: "this one")
+    b = Reading.create!(lesson_id: "this one", caption: "oops")
     a.delete
     assert_equal false, b.id == nil
   end
@@ -52,32 +52,32 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_course_has_readings_within_course_lessons
-    g = Course.create!(name: "New course")
-    h = Lesson.create!(name: "lesson_1")
-    assert g, ([])
-    g.name << ("lesson_1")
-    assert_equal g.name == "New course", "lesson_1"
+    course_1 = Course.create!(name: "History")
+    lesson_1 = Lesson.create!(name: "To be or not to be")
+    readings_1 = Reading.create!(lesson_id: lesson_1.id, caption: "Civil")
+    lesson_1.readings << (readings_1)
+    course_1.lessons << (lesson_1)
+    binding.pry
+    assert_equal course_1.readings, [readings_1]
   end
 
   def test_school_must_have_name
-    school_1 = School.create
     school_2 = School.create!(name: "New")
-    assert_equal true, school_1.id == nil
     assert_equal false, school_2.id == nil
-
+    assert_raises(StandardError) do
+      school_1 = School.create!
+    end
   end
 
   def test_terms_contains_name_startson_endson_schoolid
-    x = Term.create
     y = Term.create!(name: "1", starts_on: "2/2/22", ends_on: "1/1/11", school_id:"xxx")
-    assert_equal true, x.name == nil
-    assert_equal true, x.starts_on == nil
-    assert_equal true, x.ends_on == nil
-    assert_equal true, x.school_id == nil
     assert_equal false, y.name == nil
     assert_equal false, y.starts_on == nil
     assert_equal false, y.ends_on == nil
     assert_equal false, y.school_id == nil
+    assert_raises(StandardError) do
+      x = Term.create!
+    end
   end
 
   def test_user_contains_firstname_lastname_email
@@ -120,15 +120,15 @@ end
   end
 
   def test_assignments_contains_courseid_name_percentgrade
-    skip
-    assignment_1 = Assignment.create(course_id: 5)
-    assignment_2 = Assignment.create(name: "science")
-    assignment_3 = Assignment.create(percent_of_grade: 1.2)
-    assignment_4 = Assignment.create
-    assert_equal false, assignment_1 == nil
-    assert_equal true, assignment_4 == nil
-    assert_equal false, assignment_2 == nil
-    assert_equal false, assignment_3 == nil
+    course_3 = Course.create!(name: "other")
+    assignment_4 = Assignment.create!(name:"true science", course_id: course_3.id,percent_of_grade: 5)
+    assert_equal false, assignment_4 == nil
+    assert_raises(StandardError) do
+    assignment_1 = Assignment.create!(name: "science")
+    assignment_2 = Assignment.create!(course_id: course_3.id)
+    assignment_3 = Assignment.create!(percent_of_grade: 1.2)
+  end
+
   end
 
   def test_assignment_name_unique_for_each_courseid

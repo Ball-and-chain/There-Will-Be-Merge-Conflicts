@@ -1,15 +1,11 @@
-class Lesson < ActiveRecord::Base                                                # ~> NameError: uninitialized constant ActiveRecord
+class Lesson < ActiveRecord::Base
   validates :name, presence: true
 
-  has_many :readings
+  belongs_to :course
 
-  has_many :courses, through: :readings
-
-  has_many :reading, dependent: :destroy
+  has_many :readings, dependent: :destroy
 
   delegate :code_and_name, to: :course, prefix: true
-
-  has_many :in_class_assignment_id, inverse_of: :lesson
 
   scope :roots, -> { where("parent_lesson_id IS NULL") }
   scope :without_day_assignments, -> { where("day_assignment_id IS NULL") }
@@ -123,8 +119,3 @@ class Lesson < ActiveRecord::Base                                               
   end
 
 end
-
-# ~> NameError
-# ~> uninitialized constant ActiveRecord
-# ~>
-# ~> /Users/alexshelton/desktop/There-Will-Be-Merge-Conflicts/lesson.rb:1:in `<main>'
