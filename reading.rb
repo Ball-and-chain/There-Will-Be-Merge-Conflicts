@@ -1,4 +1,9 @@
 class Reading < ActiveRecord::Base
+  validates :lesson_id, presence: true
+
+  belongs_to :courses
+
+  belongs_to :lesson
 
   default_scope { order('order_number') }
 

@@ -1,5 +1,16 @@
 class Course < ActiveRecord::Base
 
+  validates :name, presence: true
+
+  has_many :readings
+
+  has_many :lessons, through: :readings
+
+  belongs_to :course_code, inverse_of: :instructor_id
+
+  has_many :lessons, inverse_of: :in_class_assignment_id
+
+
   default_scope { order("courses.term_id DESC, courses.course_code, courses.id DESC") }
 
   # Magic number also used in old? method below.

@@ -1,5 +1,14 @@
 class User < ActiveRecord::Base
 
+  validates_format_of :photo_url, :with => URI::regexp(%w(http https))
+  #validates_format_of :email, :with => URI::regexp
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :middle_name, presence: true
+  validates :email, uniqueness: true, presence: true
+  #has_many :first_names
+  #has_many :email, -> { distinct }, through: :first_names
+
   scope :want_to_be_instructors, -> { where(wants_to_be_instructor: true) }
   scope :instructors_for_school_id, ->(school_id) { where(school_id: school_id, instructor: true) }
 
@@ -124,3 +133,4 @@ class User < ActiveRecord::Base
     middle_initial.blank? ? "" : "#{middle_initial}. "
   end
 end
+#/([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/
