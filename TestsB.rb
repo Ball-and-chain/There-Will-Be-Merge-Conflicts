@@ -48,7 +48,9 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_lessons_contains_inclass_assignments_and_vice_versa
-
+    assingment9 = Assignment.create(name: "challenge")
+    lesson9 = Lesson.create(name: "that one", in_class_assignment_id: assignment9.id)
+    lesson9.in_class_assignment = assignment9
   end
 
   def test_course_has_readings_within_course_lessons
@@ -57,7 +59,6 @@ class ApplicationTest < Minitest::Test
     readings_1 = Reading.create!(lesson_id: lesson_1.id, caption: "Civil")
     lesson_1.readings << (readings_1)
     course_1.lessons << (lesson_1)
-    binding.pry
     assert_equal course_1.readings, [readings_1]
   end
 
